@@ -10,7 +10,7 @@ from xmodule.modulestore.django import modulestore
 
 
 @request_cached
-def get_course_outline_block_tree(request, course_id):
+def get_course_outline_block_tree(request, course_id, all_blocks=None):
     """
     Returns the root block of the course outline, with children as blocks.
     """
@@ -60,6 +60,23 @@ def get_course_outline_block_tree(request, course_id):
                 block['children'][-1]['last_accessed'] = True
 
     course_key = CourseKey.from_string(course_id)
+
+    if all_blocks is None:
+        all_blocks = get_all_course_blocks(request, course_id)
+
+    course_outline_root_block = all_blocks['blocks'].get(all_blocks['root'], None)
+    if course_outline_root_block:
+        populate_children(course_outline_root_block, all_blocks['blocks'])
+        set_last_accessed_default(course_outline_root_block)
+        mark_last_accessed(request.user, course_key, course_outline_root_block)
+    return course_outline_root_block
+
+
+# TODO: this annotation breaks the build why?
+# @request_cached
+def get_all_course_blocks(request, course_id):
+
+    course_key = CourseKey.from_string(course_id)
     course_usage_key = modulestore().make_course_usage_key(course_key)
 
     all_blocks = get_blocks(
@@ -70,10 +87,4 @@ def get_course_outline_block_tree(request, course_id):
         requested_fields=['children', 'display_name', 'type', 'due', 'graded', 'special_exam_info', 'format'],
         block_types_filter=['course', 'chapter', 'sequential']
     )
-
-    course_outline_root_block = all_blocks['blocks'].get(all_blocks['root'], None)
-    if course_outline_root_block:
-        populate_children(course_outline_root_block, all_blocks['blocks'])
-        set_last_accessed_default(course_outline_root_block)
-        mark_last_accessed(request.user, course_key, course_outline_root_block)
-    return course_outline_root_block
+    return all_blocks
