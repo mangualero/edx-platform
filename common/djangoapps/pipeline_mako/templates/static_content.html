@@ -148,6 +148,35 @@ source, template_path = Loader(engine).load_template_source(path)
     %>
 </%def>
 
+<%def name="renderReact(component, props=None)">
+    <%doc>
+        Wrapper function to load a React component via webpack() and render
+        it onto the page, passing an optional context object via props.
+    </%doc>
+    <%
+        import uuid
+        from django.template import Template, Context
+        from webpack_loader.exceptions import WebpackLoaderBadStatsError
+        id = 'react-container-{0}'.format(uuid.uuid4())
+        return Template("""
+            {% load render_bundle from webpack_loader %}
+            {% load webpack_static from webpack_loader %}
+            {% render_bundle 'ReactRenderer' %}
+
+              <div id="{{id}}"></div>
+              <script type="text/javascript">
+                  new ReactRenderer(
+                    '{% webpack_static entry %}',
+                    '#{{id}}'
+                  );
+              </script>
+        """).render(Context({
+            'entry': component,
+            'id': id
+        }))
+    %>
+</%def>
+
 <%def name="require_module(module_name, class_name)">
     <%doc>
       Loads Javascript onto your page synchronously.
