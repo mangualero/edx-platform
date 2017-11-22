@@ -1,17 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import('./HelloWorld')
+  .then(ComponentToImport => {
+    console.log(ComponentToImport);
+  });
+
 export class ReactRenderer {
   constructor(component, selector, props) {
-    const path = component;
     // ComponentToRender = import(path);
     this.elementList = document.querySelector(selector);
     this.props = props;
-    import(/* webpackChunkName: "dynamicBundle" */ path)
-      .then(ComponentToImport => {
-        console.log(ComponentToImport);
-        this.renderComponent();
-      });
+    // import(path)
+    //   .then(ComponentToImport => {
+    //     console.log(ComponentToImport);
+    //     // this.renderComponent();
+    //   });
+    // const path = 'react';
+    // import(path)
+    //   .then(ComponentToImport => {
+    //     console.log(ComponentToImport);
+    //   });
   }
 
   ReactRendererException(message) {
