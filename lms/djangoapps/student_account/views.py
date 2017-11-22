@@ -41,6 +41,7 @@ from openedx.core.djangoapps.user_api.errors import (
 from openedx.core.lib.edx_api_utils import get_edx_api_data
 from openedx.core.lib.time_zone_utils import TIME_ZONE_CHOICES
 from openedx.features.enterprise_support.api import enterprise_customer_for_request
+from student.cookies import set_logged_in_cookies
 from student.helpers import destroy_oauth_tokens, get_next_url_for_login_page
 from student.models import UserProfile
 from student.views import register_user as old_register_view
@@ -73,6 +74,32 @@ def login_and_registration_form(request, initial_mode="login"):
     # If we're already logged in, redirect to the dashboard
     if request.user.is_authenticated():
         return redirect(redirect_to)
+
+    running_pipeline = pipeline.get(request)
+    if running_pipeline:
+        current_provider = third_party_auth.provider.Registry.get_from_pipeline(running_pipeline)
+        enterprise_customer = enterprise_customer_for_request(request)
+        if enterprise_customer and current_provider.sync_learner_profile_data:
+            user_details = running_pipeline['kwargs']['details']
+
+            try:
+                qs = {'email': user_details['email']} if user_details.get('email') else \
+                    {'username': user_details.get('username')}
+                user = User.objects.get(**qs)
+            except User.DoesNotExist:
+                pass
+            else:
+                # Log the user in and return response.
+                response = render_to_response(
+                    'student_account/enterprise_login_page.html',
+                    {
+                        'disable_header': True, 'disable_footer': True, 'enterprise_customer': enterprise_customer,
+                        'user_details': user_details, 'current_user': user
+                    }
+                )
+                # Set cookies so that user session is retained in the browser.
+                response = set_logged_in_cookies(request, response, user)
+                return response
 
     # Retrieve the form descriptions from the user API
     form_descriptions = _get_form_descriptions(request)
@@ -236,6 +263,7 @@ def update_context_for_enterprise(request, context):
     context = context.copy()
 
     sidebar_context = enterprise_sidebar_context(request)
+    sync_learner_profile_data = context['data']['third_party_auth']['syncLearnerProfileData']
 
     if sidebar_context:
         context['data']['registration_form_desc']['fields'] = enterprise_fields_only(
@@ -246,6 +274,11 @@ def update_context_for_enterprise(request, context):
         context['data']['hide_auth_warnings'] = True
     else:
         context['enable_enterprise_sidebar'] = False
+
+    if sync_learner_profile_data:
+        context['data']['hide_auth_warnings'] = True
+        enterprise_customer = enterprise_customer_for_request(request)
+        context['data']['enterprise_name'] = enterprise_customer and enterprise_customer['name']
 
     return context
 
@@ -327,6 +360,7 @@ def _third_party_auth_context(request, redirect_to, tpa_hint=None):
         "finishAuthUrl": None,
         "errorMessage": None,
         "registerFormSubmitButtonText": _("Create Account"),
+        "syncLearnerProfileData": False,
     }
 
     if third_party_auth.is_enabled():
@@ -358,6 +392,7 @@ def _third_party_auth_context(request, redirect_to, tpa_hint=None):
             if current_provider is not None:
                 context["currentProvider"] = current_provider.name
                 context["finishAuthUrl"] = pipeline.get_complete_url(current_provider.backend_name)
+                context["syncLearnerProfileData"] = current_provider.sync_learner_profile_data
 
                 if current_provider.skip_registration_form:
                     # For enterprise (and later for everyone), we need to get explicit consent to the
