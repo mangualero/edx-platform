@@ -835,7 +835,7 @@ class TestRenderMessageToString(SharedModuleStoreTestCase):
         self.assertEqual(settings.LANGUAGE_CODE, language_after_rendering)
 
     def test_platform_language_is_used_for_logged_in_user(self):
-        with override_language('zh_CN'):    # simulate a user login
+        with override_language('zh_HANS'):    # simulate a user login
             subject, message = self.get_subject_and_message(None)
             self.assertIn("You have been", subject)
             self.assertIn("You have been", message)

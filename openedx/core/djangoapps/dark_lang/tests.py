@@ -351,12 +351,12 @@ class DarkLangMiddlewareTests(TestCase):
 
     def test_accept_chinese_language_codes(self):
         DarkLangConfig(
-            released_languages=('zh-cn, zh-hk, zh-tw'),
+            released_languages=('zh-hans, zh-hk, zh-tw'),
             changed_by=self.user,
             enabled=True
         ).save()
 
         self.assertAcceptEquals(
-            'zh-cn;q=1.0, zh-tw;q=0.5, zh-hk;q=0.3',
+            'zh-hans;q=1.0, zh-tw;q=0.5, zh-hk;q=0.3',
             self.process_middleware_request(accept='zh-Hans;q=1.0, zh-Hant-TW;q=0.5, zh-HK;q=0.3')
         )
