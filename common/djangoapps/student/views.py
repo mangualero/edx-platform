@@ -916,7 +916,6 @@ def dashboard(request):
             'use_ecommerce_payment_flow': True,
             'ecommerce_payment_page': ecommerce_service.payment_page_url(),
         })
-
     response = render_to_response('dashboard.html', context)
     set_user_info_cookie(response, request)
     return response

@@ -18,6 +18,8 @@ from mock import patch
 from opaque_keys import InvalidKeyError
 from pyquery import PyQuery as pq
 
+from entitlements.tests.factories import CourseEntitlementFactory
+from openedx.core.djangoapps.catalog.tests.factories import CourseFactory as CatalogCourseFactory
 from student.cookies import get_user_info_cookie_data
 from student.helpers import DISABLE_UNENROLL_CERT_STATES
 from student.models import CourseEnrollment, UserProfile
@@ -335,3 +337,35 @@ class StudentDashboardTests(SharedModuleStoreTestCase, MilestonesTestCaseMixin):
         remove_prerequisite_course(self.course.id, get_course_milestones(self.course.id)[0])
         response = self.client.get(reverse('dashboard'))
         self.assertNotIn('<div class="prerequisites">', response.content)
+
+    def test_unfulfilled_entitlement(self):
+        """
+        When a learner has an unfulfilled entitlement, their course dashboard should have:
+            - a hidden 'View Course' button
+            - the text 'In order to view the course you must select a session:'
+            - an unhidden course-entitlement-selection-container
+        """
+        self.course_entitlement = CourseEntitlementFactory(user=self.user)
+        from pdb import set_trace; set_trace()
+        response = self.client.get(self.path)
+        # self.assertIn(, response.content)
+        self.assertIn('You must select a session below to access course.', response.content)
+        # self.assertIn(, response.content)
+
+    def test_fulfilled_entitlement(self):
+        """
+        When a learner has a fulfilled entitlement, their course dashboard should:
+            - have an entitlement card
+            - NOT have a course card referencing the selected session
+            - the text 'To change your session or leave your current session, please select from the following'
+            - NOT have a hidden change-session btn-link
+        """
+        self.course_enrollment = CourseEnrollmentFactory(user=self.user)
+        self.course_entitlement= CourseEntitlementFactory(user=self.user, enrollment_course_run=enrollment)
+        response = self.client.get(self.path)
+        # self.assertIn(, response.content)
+        # self.assertNotIn(, response.content)
+        self.assertIn(
+            'To change your session or leave your current session, please select from the following', response.content
+        )
+        # self.assertNotIn(, response.content)

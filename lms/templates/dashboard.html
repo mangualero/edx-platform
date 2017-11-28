@@ -125,10 +125,12 @@ from student.models import CourseEnrollment
               <%
                 # Check if the course run is an entitlement and if it has an associated session
                 entitlement = enrollment if isinstance(enrollment, CourseEntitlement) else None
+                print entitlement
                 entitlement_session = entitlement.enrollment_course_run if entitlement else None
 
                 is_fulfilled_entitlement = True if entitlement and entitlement_session else False
                 is_unfulfilled_entitlement = True if entitlement and not entitlement_session else False
+                print is_unfulfilled_entitlement
 
                 entitlement_available_sessions = []
                 if entitlement:
