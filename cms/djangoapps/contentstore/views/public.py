@@ -12,7 +12,7 @@ from edxmako.shortcuts import render_to_response
 from openedx.core.djangoapps.external_auth.views import redirect_with_get, ssl_get_cert_from_request, ssl_login_shortcut
 from openedx.core.djangoapps.site_configuration import helpers as configuration_helpers
 
-__all__ = ['signup', 'login_page', 'howitworks']
+__all__ = ['signup', 'login_page', 'howitworks', 'accessibility']
 
 
 @ensure_csrf_cookie
@@ -70,3 +70,16 @@ def howitworks(request):
         return redirect('/home/')
     else:
         return render_to_response('howitworks.html', {})
+
+def accessibility(request):
+    """
+    Display the accessibility accomodation form.
+    """
+    return render_to_response(
+        'accessibility.html',
+        {
+            'zendesk_api_host': settings.ZENDESK_URL,
+            'access_token': settings.ZENDESK_OAUTH_ACCESS_TOKEN,
+            'custom_fields': settings.ZENDESK_CUSTOM_FIELDS
+        }
+    )
