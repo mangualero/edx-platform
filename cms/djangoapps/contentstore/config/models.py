@@ -75,3 +75,50 @@ class CourseNewAssetsPageFlag(ConfigurationModel):
             not_en = ""
         # pylint: disable=no-member
         return u"Course '{}': New assets page {}Enabled".format(self.course_id.to_deprecated_string(), not_en)
+
+class AccessibilityPageFlag(ConfigurationModel):
+    """
+    Enables the in-development new accessibility page from studio-frontend.
+
+    Defaults to False platform-wide.
+    """
+    # this field overrides course-specific settings to enable the feature for all courses
+    # enabled_for_all_courses = BooleanField(default=False)
+
+    @classmethod
+    def feature_enabled(cls):
+        """
+        Looks at the currently active configuration model to determine whether
+        the new accessibility page feature is available.
+
+        There are 2 booleans to be concerned with - enabled_for_all_courses,
+        and the implicit is_enabled(). They interact in the following ways:
+            - is_enabled: False, enabled_for_all_courses: True or False
+                - no one can use the feature.
+            - is_enabled: True, enabled_for_all_courses: False
+                - check for a CourseNewAssetsPageFlag, use that value (default False)
+                - if no course_id provided, return False
+            - is_enabled: True, enabled_for_all_courses: True
+                - everyone can use the feature
+        """
+        if not AccessibilityPageFlag.is_enabled():
+            return False
+        # elif not NewAssetsPageFlag.current().enabled_for_all_courses:
+        #     if course_id:
+        #         effective = CourseNewAssetsPageFlag.objects.filter(course_id=course_id).order_by('-change_date').first()
+        #         return effective.enabled if effective is not None else False
+        #     else:
+        #         return False
+        else:
+            return True
+
+    class Meta(object):
+        app_label = "contentstore"
+
+    def __unicode__(self):
+        current_model = AccessibilityPageFlag.current()
+        return u"AccessibilityPageFlag: enabled {}".format(
+            current_model.is_enabled()
+        )
+
+
