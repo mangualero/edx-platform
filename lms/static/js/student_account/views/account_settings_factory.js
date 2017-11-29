@@ -137,7 +137,7 @@
             aboutSectionsData = [
                 {
                     title: gettext('Basic Account Information'),
-                    subtitle: gettext('These settings include basic information about your account gg.'),
+                    subtitle: gettext('These settings include basic information about your account.'),
 
                     messageType: aboutSectionMessageType,
                     message: aboutSectionMessage,
