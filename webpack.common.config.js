@@ -7,6 +7,8 @@ var webpack = require('webpack');
 var BundleTracker = require('webpack-bundle-tracker');
 var StringReplace = require('string-replace-webpack-plugin');
 
+var entryPoints = require('./entryPoints.js');
+
 var namespacedRequireFiles = [
     path.resolve(__dirname, 'common/static/common/js/components/views/feedback_notification.js'),
     path.resolve(__dirname, 'common/static/common/js/components/views/feedback.js')
@@ -15,31 +17,7 @@ var namespacedRequireFiles = [
 module.exports = {
     context: __dirname,
 
-    entry: {
-        // Studio
-        AssetsPage: './node_modules/@edx/studio-frontend/src/index.jsx',
-        Import: './cms/static/js/features/import/factories/import.js',
-        StudioIndex: './cms/static/js/features_jsx/studio/index.jsx',
-
-        // LMS
-        SingleSupportForm: './lms/static/support/jsx/single_support_form.jsx',
-        AlertStatusBar: './lms/static/js/accessible_components/StatusBarAlert.jsx',
-
-        // Features
-        CourseGoals: './openedx/features/course_experience/static/course_experience/js/CourseGoals.js',
-        CourseHome: './openedx/features/course_experience/static/course_experience/js/CourseHome.js',
-        CourseOutline: './openedx/features/course_experience/static/course_experience/js/CourseOutline.js',
-        CourseSock: './openedx/features/course_experience/static/course_experience/js/CourseSock.js',
-        CourseTalkReviews: './openedx/features/course_experience/static/course_experience/js/CourseTalkReviews.js',
-        Currency: './openedx/features/course_experience/static/course_experience/js/currency.js',
-        Enrollment: './openedx/features/course_experience/static/course_experience/js/Enrollment.js',
-        LatestUpdate: './openedx/features/course_experience/static/course_experience/js/LatestUpdate.js',
-        WelcomeMessage: './openedx/features/course_experience/static/course_experience/js/WelcomeMessage.js',
-
-        // Common
-        ReactRenderer: './common/static/js/src/ReactRenderer.jsx',
-        HelloWorld: './common/static/js/src/HelloWorld.jsx'
-    },
+    entry: entryPoints,
 
     output: {
         path: path.resolve(__dirname, 'common/static/bundles'),

@@ -161,13 +161,13 @@ source, template_path = Loader(engine).load_template_source(path)
         return Template("""
             {% load render_bundle from webpack_loader %}
             {% load webpack_static from webpack_loader %}
+            {% render_bundle entry %}
             {% render_bundle 'ReactRenderer' %}
-            {% webpack_static entry %}
 
               <div id="{{id}}"></div>
               <script type="text/javascript">
                   new ReactRenderer(
-                    '{% webpack_static entry %}',
+                    '{{entry}}',
                     '#{{id}}'
                   );
               </script>
