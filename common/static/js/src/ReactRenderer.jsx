@@ -1,23 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import entryPoints from '../../../../entryPoints';
-console.log(entryPoints);
-
 export class ReactRenderer {
   constructor(component, selector, props) {
-    // ComponentToRender = import(path);
     this.targetElement = this.getTargetElement(selector);
     this.props = props;
-    // console.log(entryPoints[component]);
-    const entryPoints = {
-      HelloWorld: './common/static/js/src/HelloWorld.jsx'
-    };
-    import(/* webpackMode: "lazy-once" */ `../../../.${entryPoints[component]}`)
-      .then(ComponentToImport => {
-        console.log('foofoo');
-        console.log(ComponentToImport);
-      });
+    this.component = component;
+    this.renderComponent();
   }
 
   ReactRendererException(message) {
@@ -40,9 +29,7 @@ export class ReactRenderer {
 
   renderComponent() {
     ReactDOM.render(
-      <MyComponent
-        {...this.props}
-      />,
+      React.createElement(this.component, this.props, null),
       this.targetElement,
     );
   }

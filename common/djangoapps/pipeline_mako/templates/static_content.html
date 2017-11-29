@@ -167,7 +167,7 @@ source, template_path = Loader(engine).load_template_source(path)
               <div id="{{id}}"></div>
               <script type="text/javascript">
                   new ReactRenderer(
-                    '{{entry}}',
+                    {{entry}},
                     '#{{id}}'
                   );
               </script>
