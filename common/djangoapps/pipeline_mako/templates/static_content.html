@@ -166,10 +166,14 @@ source, template_path = Loader(engine).load_template_source(path)
 
               <div id="{{id}}"></div>
               <script type="text/javascript">
-                  new ReactRenderer(
-                    {{entry}},
-                    '#{{id}}'
-                  );
+                  var entry;
+                  try { entry = {{entry}}; } catch (e) { entry = null; }
+                  new ReactRenderer({
+                    component: entry,
+                    selector: '#{{id}}',
+                    componentName: '{{entry}}',
+                    props: {}
+                  });
               </script>
         """).render(Context({
             'entry': component,
