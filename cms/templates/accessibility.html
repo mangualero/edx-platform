@@ -1,5 +1,4 @@
 <%page expression_filter="h"/>
->
 <%inherit file="base.html" />
 <%def name="online_help_token()"><% return "accessibility" %></%def>
 <%!
@@ -8,7 +7,7 @@
   from openedx.core.djangolib.markup import HTML, Text
   from openedx.core.djangolib.js_utils import js_escaped_string, dump_js_escaped_json
 %>
-<%block name="title">${_("Accessibility")}</%block>
+<%block name="title">${_("Studio Accessibility Policy")}</%block>
 <%block name="bodyclass">is-signedin not-signedin view-accessibility</%block>
 
 <%namespace name='static' file='static_content.html'/>
@@ -19,7 +18,7 @@
      <div class="content">
         <div class="content-primary">
             <div id="root"></div>
-            <h1>Accessibility Accomodation Request</h1>
+            <h1>Accessibility Accommodation Request</h1>
         </div>
     </div>
 </div>

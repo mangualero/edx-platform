@@ -30,7 +30,7 @@ from cms.djangoapps.contentstore.config.waffle import waffle, ENABLE_ACCESSIBILI
             % endif
             % if waffle().is_enabled(ENABLE_ACCESSIBILITY_POLICY_PAGE):
               <li class="nav-item nav-peripheral-aar">
-                <a data-rel="edx.org" href="/accessibility">${_("Accessibility Accomodation Request")}</a>
+                <a data-rel="edx.org" href="${reverse('accessibility')}">${_("Accessibility Accomodation Request")}</a>
               </li>
             %endif
           </ol>

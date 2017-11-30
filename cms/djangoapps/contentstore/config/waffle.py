@@ -10,6 +10,7 @@ WAFFLE_NAMESPACE = u'accessibility'
 # Switches
 ENABLE_ACCESSIBILITY_POLICY_PAGE = u'enable_policy_page'
 
+
 def waffle():
     """
     Returns the namespaced, cached, audited Waffle class for Accessibility Accomodation Request Page.
