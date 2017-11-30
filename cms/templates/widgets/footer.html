@@ -16,7 +16,11 @@ from openedx.core.djangoapps.waffle_utils import WaffleSwitchNamespace
         <p>&copy; ${datetime.now(pytz.timezone(settings.TIME_ZONE)).year} <a data-rel="edx.org" href="${marketing_link('ROOT')}" rel="external">${settings.PLATFORM_NAME}</a>.</p>
       </div>
 
-      % if is_any_marketing_link_set(['TOS', 'PRIVACY']):
+      <%
+        WAFFLE_SWITCHES = WaffleSwitchNamespace(name=settings.ACCESSIBILITY_PAGE_SWITCH_NAMESPACE)
+      %>
+
+      % if is_any_marketing_link_set(['TOS', 'PRIVACY']) or WAFFLE_SWITCHES.is_enabled(settings.ENABLE_ACCESSIBILITY_POLICY_PAGE_SWITCH):
         <nav class="nav-peripheral">
           <ol>
             % if is_marketing_link_set('TOS'):
@@ -29,24 +33,14 @@ from openedx.core.djangoapps.waffle_utils import WaffleSwitchNamespace
                 <a data-rel="edx.org" href="${marketing_link('PRIVACY')}">${_("Privacy Policy")}</a>
               </li>
             % endif
+            % if WAFFLE_SWITCHES.is_enabled(settings.ENABLE_ACCESSIBILITY_POLICY_PAGE_SWITCH):
+              <li class="nav-item nav-peripheral-aar">
+                <a data-rel="edx.org" href="/accessibility">${_("Accessibility Accomodation Request")}</a>
+              </li>
+            %endif
           </ol>
         </nav>
       % endif
-
-    <%
-      WAFFLE_SWITCHES = WaffleSwitchNamespace(name=u'accessibility')
-    %>
-
-    % if WAFFLE_SWITCHES.is_enabled(u'enable_accessibility_page'):
-      <nav class="nav-peripheral">
-        <ol>
-            <li class="nav-item nav-peripheral-aar">
-              <a data-rel="edx.org" href="/accessibility">Accessibility Accomodation Request</a>
-            </li>
-        <ol>
-      </nav>
-    % endif
-    </div>
 
     <div class="footer-content-secondary" aria-label="${_("Legal")}">
       <div class="footer-about-copyright">

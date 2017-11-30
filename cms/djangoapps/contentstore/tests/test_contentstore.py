@@ -2151,6 +2151,9 @@ class EntryPageTestCase(TestCase):
         # Logout redirects.
         self._test_page("/logout", 302)
 
+    def test_accessibility(self):
+        self._test_page('/accessibility')
+
 
 class SigninPageTestCase(TestCase):
     """

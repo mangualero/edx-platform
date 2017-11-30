@@ -11,7 +11,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from edxmako.shortcuts import render_to_response
 from openedx.core.djangoapps.external_auth.views import redirect_with_get, ssl_get_cert_from_request, ssl_login_shortcut
 from openedx.core.djangoapps.site_configuration import helpers as configuration_helpers
-from contentstore.config.models import AccessibilityPageFlag
+from waffle.decorators import waffle_switch
 
 __all__ = ['signup', 'login_page', 'howitworks', 'accessibility']
 
@@ -72,16 +72,18 @@ def howitworks(request):
     else:
         return render_to_response('howitworks.html', {})
 
+@waffle_switch('{}.{}'.format(settings.ACCESSIBILITY_PAGE_SWITCH_NAMESPACE, settings.ENABLE_ACCESSIBILITY_POLICY_PAGE_SWITCH))
 def accessibility(request):
     """
     Display the accessibility accomodation form.
     """
+
     return render_to_response(
         'accessibility.html',
         {
-            'waffle_flag_enabled': AccessibilityPageFlag.feature_enabled(),
             'zendesk_api_host': settings.ZENDESK_URL,
             'access_token': settings.ZENDESK_OAUTH_ACCESS_TOKEN,
             'custom_fields': settings.ZENDESK_CUSTOM_FIELDS
         }
     )
+

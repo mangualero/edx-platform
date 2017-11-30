@@ -1,44 +1,27 @@
 <%page expression_filter="h"/>
 >
 <%inherit file="base.html" />
-<%def name="online_help_token()"><% return "files" %></%def>
+<%def name="online_help_token()"><% return "accessibility" %></%def>
 <%!
   from django.core.urlresolvers import reverse
   from django.utils.translation import ugettext as _
   from openedx.core.djangolib.markup import HTML, Text
   from openedx.core.djangolib.js_utils import js_escaped_string, dump_js_escaped_json
-  from openedx.core.djangoapps.waffle_utils import WaffleSwitchNamespace
 %>
 <%block name="title">${_("Accessibility")}</%block>
-<%block name="bodyclass">is-signedin course uploads view-uploads</%block>
+<%block name="bodyclass">is-signedin not-signedin view-accessibility</%block>
 
 <%namespace name='static' file='static_content.html'/>
 
 <%block name="content">
 
-<%
-    WAFFLE_SWITCHES = WaffleSwitchNamespace(name=u'accessibility')
-%>
-
-<div class="wrapper-content-header wrapper">
-  <section class="content content-header">
-    % if WAFFLE_SWITCHES.is_enabled(u'enable_accessibility_page'):
-        <header>
-          <h1><span class="wrapper-text-welcome">${_("Welcome to {studio_name}").format(
-              studio_name=settings.STUDIO_NAME
-          )}</span></h1>
-          <p class="tagline">Waffle switch is active! :)
-          </p>
-        </header>
-    % else:
-        <header>
-          <h1><span class="wrapper-text-welcome">${_("Welcome to {studio_name}").format(
-              studio_name=settings.STUDIO_NAME
-          )}</span></h1>
-          <p class="tagline"> Waffle switch is inactive! :(
-          </p>
-        </header>
-    % endif
-  </section>
+<div class="wrapper-content wrapper">
+     <div class="content">
+        <div class="content-primary">
+            <div id="root"></div>
+            <h1>Accessibility Accomodation Request</h1>
+        </div>
+    </div>
 </div>
+
 </%block>

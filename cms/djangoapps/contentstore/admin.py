@@ -6,7 +6,7 @@ from config_models.admin import ConfigurationModelAdmin, KeyedConfigurationModel
 from django.contrib import admin
 
 from contentstore.config.forms import CourseNewAssetsPageAdminForm
-from contentstore.config.models import NewAssetsPageFlag, CourseNewAssetsPageFlag, AccessibilityPageFlag
+from contentstore.config.models import NewAssetsPageFlag, CourseNewAssetsPageFlag
 from contentstore.models import PushNotificationConfig, VideoUploadConfig
 
 
@@ -26,7 +26,6 @@ class CourseNewAssetsPageAdmin(KeyedConfigurationModelAdmin):
 
 admin.site.register(NewAssetsPageFlag, ConfigurationModelAdmin)
 admin.site.register(CourseNewAssetsPageFlag, CourseNewAssetsPageAdmin)
-admin.site.register(AccessibilityPageFlag, ConfigurationModelAdmin)
 
 admin.site.register(VideoUploadConfig, ConfigurationModelAdmin)
 admin.site.register(PushNotificationConfig, ConfigurationModelAdmin)
