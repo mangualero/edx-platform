@@ -30,7 +30,6 @@ class CourseOutlineFragmentView(EdxFragmentView):
         if not course_block_tree:
             return None
 
-
         content_milestones = self.get_content_milestones(request, course_key, all_course_blocks)
 
         context = {
@@ -43,7 +42,7 @@ class CourseOutlineFragmentView(EdxFragmentView):
         return Fragment(html)
 
     def get_content_milestones(self, request, course_key, all_course_blocks):
-                
+
         course_content_milestones = {}
 
         all_course_prereqs = get_course_content_milestones(
@@ -59,13 +58,13 @@ class CourseOutlineFragmentView(EdxFragmentView):
             user_id=request.user.id)
 
         for milestone in all_course_prereqs:
-            course_content_milestones[ milestone['content_id'] ] = {
+            course_content_milestones[milestone['content_id']] = {
                 'completed_prereqs': True,
                 'min_score': milestone['requirements']['min_score'],
                 'prereq': all_course_blocks['blocks'][milestone['namespace'].replace('.gating', '')]['display_name']
             }
-        
+
         for milestone in unfulfilled_prereqs:
             course_content_milestones[milestone['content_id']]['completed_prereqs'] = False
-    
+
         return course_content_milestones
