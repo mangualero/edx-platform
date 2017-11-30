@@ -89,18 +89,8 @@ def login_and_registration_form(request, initial_mode="login"):
             except User.DoesNotExist:
                 pass
             else:
-                # Log the user in and return response.
-                response = render_to_response(
-                    'student_account/enterprise_login_page.html',
-                    {
-                        'disable_header': True, 'disable_footer': True, 'enterprise_customer': enterprise_customer,
-                        'user_details': user_details, 'current_user': user,
-                        'redirect_url':  pipeline.get_complete_url(current_provider.backend_name)
-                    }
-                )
-                # Set cookies so that user session is retained in the browser.
-                response = set_logged_in_cookies(request, response, user)
-                return response
+                pipeline.sync_user_with_sso_provider_data(current_provider, user_details, user)
+                redirect(reverse('signin_user'), next=redirect_to)
 
     # Retrieve the form descriptions from the user API
     form_descriptions = _get_form_descriptions(request)
