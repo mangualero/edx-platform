@@ -1,4 +1,4 @@
-/* globals DiscussionSpecHelper, DiscussionUtil */
+/* globals DiscussionSpecHelper, DiscussionCourseSettings, NewPostView, DiscussionUtil */
 (function() {
     'use strict';
     describe('DiscussionUtil', function() {
@@ -87,6 +87,79 @@
                 });
                 expect($elem.prop).toHaveBeenCalledWith('disabled', true);
                 expect(beforeSendSpy).toHaveBeenCalled();
+            });
+        });
+
+        describe('handleKeypressInToolbar', function() {
+            function focused(element) {
+                return $(element)[0] === $(element)[0].ownerDocument.activeElement;
+            }
+
+            beforeEach(function() {
+                this.course_settings = new DiscussionCourseSettings({
+                    category_map: {
+                        children: [['Topic', 'entry'], ['General', 'entry'], ['Not Cohorted', 'entry']],
+                        entries: {
+                            Topic: {
+                                is_divided: true,
+                                id: 'topic'
+                            },
+                            General: {
+                                is_divided: true,
+                                id: 'general'
+                            },
+                            'Not Cohorted': {
+                                is_divided: false,
+                                id: 'not-cohorted'
+                            }
+                        }
+                    }
+                });
+                this.view = new NewPostView({
+                    el: $('#fixture-element'),
+                    collection: this.discussion,
+                    course_settings: this.course_settings,
+                    mode: 'tab'
+                });
+
+                this.firstButton = this.view.$('.wmd-button-row:first-child');
+                this.subsequentButtons = this.view.$('.wmd-button-first-row > button');
+            });
+
+            it('can only focus on first button in toolbar', function() {
+                this.firstButton.focus();
+
+                expect(this.firstButton).toHaveAttr({
+                    'tabindex': '0'
+                });
+
+                this.subsequentButtons.each(function (button) {
+                    expect(button).toHaveAttr({
+                        'tabindex': '-1'
+                    });
+                });
+            });
+
+            it('navigates the toolbar by pressing left/right arrow keys', function() {
+                var nextButton;
+
+                this.firstButton.focus();
+                this.firstButton.simulate('keydown', {keyCode: $.simulate.keyCode.RIGHT});
+
+                nextButton = this.firstButton.nextSibling();
+
+                expect(this.nextButton).toHaveAttr({
+                    'tabindex': '0'
+                });
+                expect(focused(this.nextButton), true);
+            });
+
+            it('moves focus to next element when pressing tab', function() {
+                var nextFocusableElement = this.firstButton.parent().nextSibling();
+                this.firstButton.focus();
+                this.firstButton.simulate('tab', {keyCode: $.simulate.keyCode.TAB});
+
+                expect(focused(nextFocusableElement), true);
             });
         });
     });

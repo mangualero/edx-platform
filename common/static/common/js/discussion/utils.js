@@ -543,26 +543,26 @@
         };
 
         DiscussionUtil.handleKeypressInToolbar = function(event) {
-                var $currentButton, $nextButton, $toolbar, $allButtons,
-                    keyPressed, nextIndex, currentButtonIndex;
+            var $currentButton, $nextButton, $toolbar, $allButtons,
+                keyPressed, nextIndex, currentButtonIndex;
 
-                var leftKey = this.LEFT_KEYCODE;
-                var rightKey = this.RIGHT_KEYCODE;
+            var leftKey = this.LEFT_KEYCODE;
+            var rightKey = this.RIGHT_KEYCODE;
 
-                $currentButton = $(event.target);
-                keyPressed = event.which || event.keyCode;
-                $toolbar = $(event.target).parent();
-                $allButtons = $toolbar.children('.wmd-button');
+            $currentButton = $(event.target);
+            keyPressed = event.which || event.keyCode;
+            $toolbar = $(event.target).parent();
+            $allButtons = $toolbar.children('.wmd-button');
 
-                if (keyPressed === leftKey || keyPressed === rightKey) {
-                        currentButtonIndex = $allButtons.index($currentButton);
-                        nextIndex = keyPressed === leftKey ? currentButtonIndex - 1 : currentButtonIndex + 1;
-                        nextIndex = Math.max(Math.min(nextIndex, $allButtons.length - 1), 0);
+            if (keyPressed === leftKey || keyPressed === rightKey) {
+                    currentButtonIndex = $allButtons.index($currentButton);
+                    nextIndex = keyPressed === leftKey ? currentButtonIndex - 1 : currentButtonIndex + 1;
+                    nextIndex = Math.max(Math.min(nextIndex, $allButtons.length - 1), 0);
 
-                        $nextButton = $($allButtons[nextIndex]);
-                        this.moveSelectionToNextItem($currentButton, $nextButton);
-                }
-            };
+                    $nextButton = $($allButtons[nextIndex]);
+                    this.moveSelectionToNextItem($currentButton, $nextButton);
+            }
+        };
 
         DiscussionUtil.moveSelectionToNextItem = function(prevItem, nextItem) {
             prevItem.attr('aria-selected', 'false');

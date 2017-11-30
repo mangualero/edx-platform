@@ -361,5 +361,24 @@
                 return expect(this.view.$el.find('.action-vote').closest('.actions-item')).toHaveClass('is-disabled');
             });
         });
+        describe('a11y toolbar', function() {
+            beforeEach(function() {
+                this.view = new DiscussionThreadView({
+                    model: this.thread,
+                    el: $('#fixture-element'),
+                    course_settings: DiscussionSpecHelper.createTestCourseSettings()
+                });
+            });
+
+            it('calls handleKeypressInToolbar on keypress in toolbar', function() {
+                var spy = spyOn(DiscussionUtil, 'handleKeypressInToolbar');
+
+                var firstButton = this.view.$('.wmd-button-row:first-child');
+                console.log(firstButton);
+                firstButton.focus();
+
+                expect(spy).toHaveBeenCalled();
+            });
+        });
     });
 }).call(this);
