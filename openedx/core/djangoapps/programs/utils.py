@@ -630,7 +630,23 @@ class ProgramMarketingDataExtender(ProgramDataExtender):
             program_instructors = self.instructors
             cache.set(cache_key, program_instructors, 3600)
 
-        self.data['instructors'] = program_instructors
+        sorted_instructor_names = [
+            ' '.join(filter(None, (instructor['given_name'], instructor['family_name'])))
+            for instructor in self.data['instructors']
+        ]
+        instructors_to_be_sorted = [
+            instructor for instructor in program_instructors 
+            if instructor['name'] in sorted_instructor_names
+        ]
+        instructors_to_not_be_sorted = [
+            instructor for instructor in program_instructors 
+            if instructor['name'] not in sorted_instructor_names
+        ]
+        sorted_instructors = sorted(
+            instructors_to_be_sorted, 
+            key=lambda item: sorted_instructor_names.index(item['name'])
+        )
+        self.data['instructors'] = sorted_instructors + instructors_to_not_be_sorted
 
     def extend(self):
         """Execute extension handlers, returning the extended data."""
