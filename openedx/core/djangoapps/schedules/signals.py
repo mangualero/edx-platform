@@ -38,7 +38,7 @@ def create_schedule(sender, **kwargs):
 
     enrollment = kwargs['instance']
     schedule_config = ScheduleConfig.current(current_site)
-    if (not schedule_config.create_schedules):
+    if not schedule_config.create_schedules:
         log.debug('Schedules: Creation not enabled for this course or for this site')
         return
 

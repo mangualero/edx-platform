@@ -33,7 +33,6 @@ from lms.djangoapps.commerce.models import CommerceConfiguration
 from lms.djangoapps.verify_student.models import VerificationDeadline
 from lms.djangoapps.verify_student.tests.factories import SoftwareSecurePhotoVerificationFactory
 from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
-from openedx.core.djangoapps.schedules.signals import CREATE_SCHEDULE_WAFFLE_FLAG
 from openedx.core.djangoapps.self_paced.models import SelfPacedConfiguration
 from openedx.core.djangoapps.site_configuration.tests.factories import SiteFactory
 from openedx.core.djangoapps.user_api.preferences.api import set_user_preference
@@ -581,7 +580,6 @@ class TestScheduleOverrides(SharedModuleStoreTestCase):
 
         mock_get_current_site.return_value = SiteFactory.create()
 
-    @override_waffle_flag(CREATE_SCHEDULE_WAFFLE_FLAG, True)
     def test_date_with_self_paced_with_enrollment_before_course_start(self):
         """ Enrolling before a course begins should result in the upgrade deadline being set relative to the
         course start date. """
@@ -603,7 +601,6 @@ class TestScheduleOverrides(SharedModuleStoreTestCase):
         )
         self.assertEqual(upgrade_date_summary.relative_datestring, 'by {date}')
 
-    @override_waffle_flag(CREATE_SCHEDULE_WAFFLE_FLAG, True)
     def test_date_with_self_paced_with_enrollment_after_course_start(self):
         """ Enrolling after a course begins should result in the upgrade deadline being set relative to the
         enrollment date.
@@ -636,7 +633,6 @@ class TestScheduleOverrides(SharedModuleStoreTestCase):
         expected = enrollment.created + timedelta(days=course_config.deadline_days)
         self.assertEqual(block.date, expected)
 
-    @override_waffle_flag(CREATE_SCHEDULE_WAFFLE_FLAG, True)
     def test_date_with_self_paced_without_dynamic_upgrade_deadline(self):
         """ Disabling the dynamic upgrade deadline functionality should result in the verified mode's
         expiration date being returned. """
@@ -647,7 +643,6 @@ class TestScheduleOverrides(SharedModuleStoreTestCase):
         block = VerifiedUpgradeDeadlineDate(course, enrollment.user)
         self.assertEqual(block.date, expected)
 
-    @override_waffle_flag(CREATE_SCHEDULE_WAFFLE_FLAG, True)
     def test_date_with_existing_schedule(self):
         """ If a schedule is created while deadlines are disabled, they shouldn't magically appear once the feature is
         turned on. """
@@ -707,7 +702,6 @@ class TestScheduleOverrides(SharedModuleStoreTestCase):
         (True, True, True, True, True, False),
     )
     @ddt.unpack
-    @override_waffle_flag(CREATE_SCHEDULE_WAFFLE_FLAG, True)
     def test_date_with_org_and_course_config_overrides(self, enroll_first, org_config_enabled, org_config_opt_out,
                                                        course_config_enabled, course_config_opt_out,
                                                        expected_dynamic_deadline):
