@@ -75,4 +75,3 @@ class CourseNewAssetsPageFlag(ConfigurationModel):
             not_en = ""
         # pylint: disable=no-member
         return u"Course '{}': New assets page {}Enabled".format(self.course_id.to_deprecated_string(), not_en)
-

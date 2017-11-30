@@ -107,4 +107,6 @@
         },
         "url": "http://localhost:18040"
     },
+    "ZENDESK_API_KEY": "",
+    "ZENDESK_USER": ""
 }
