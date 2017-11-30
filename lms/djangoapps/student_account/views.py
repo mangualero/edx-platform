@@ -94,7 +94,8 @@ def login_and_registration_form(request, initial_mode="login"):
                     'student_account/enterprise_login_page.html',
                     {
                         'disable_header': True, 'disable_footer': True, 'enterprise_customer': enterprise_customer,
-                        'user_details': user_details, 'current_user': user
+                        'user_details': user_details, 'current_user': user,
+                        'redirect_url':  pipeline.get_complete_url(current_provider.backend_name)
                     }
                 )
                 # Set cookies so that user session is retained in the browser.

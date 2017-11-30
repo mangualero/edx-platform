@@ -18,7 +18,7 @@
       <header class="global-header ">
         <div class="main-header">
           <h1 class="header-logo">
-            <a class="sync-learner-account-logo" href="${reverse('dashboard')}">
+            <a class="sync-learner-account-logo" href="${redirect_url}">
               <img  class="logo" src="${branding_api.get_logo_url(is_secure)}" alt="${_("{platform_name} Home Page").format(platform_name=static.get_platform_name())}"/>
             </a>
           </h1>
@@ -58,8 +58,8 @@
             %endif
           </div>
 
-          <a href="${reverse('dashboard')}" class="action action-primary action-update login-button">${_("OK")}</a>
-          <a href="${reverse('account_settings')}">${_("Go to account settings")}</a>
+          <a href="${redirect_url}" class="action action-primary action-update login-button">${_("OK")}</a>
+          <a href="${redirect_url}?next=${reverse('account_settings')}">${_("Go to account settings.")}</a>
         </div>
       </div>
     </section>
