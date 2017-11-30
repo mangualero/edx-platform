@@ -90,7 +90,7 @@ def login_and_registration_form(request, initial_mode="login"):
                 pass
             else:
                 pipeline.sync_user_with_sso_provider_data(current_provider, user_details, user)
-                redirect(reverse('signin_user'), next=redirect_to)
+                return redirect(reverse('signin_user'), next=redirect_to)
 
     # Retrieve the form descriptions from the user API
     form_descriptions = _get_form_descriptions(request)
