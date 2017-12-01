@@ -373,6 +373,7 @@ class SuccessFactorsIntegrationTest(SamlIntegrationTestUtilities, IntegrationTes
             'odata_api_root_url': 'http://api.successfactors.com/odata/v2/',
             'odata_company_id': 'NCC1701D',
             'odata_client_id': 'TatVotSEiCMteSNWtSOnLanCtBGwNhGB',
+            'odata_user_request_fields': 'username,firstName,country,lastName,defaultFullName,email',
         }
 
         self._configure_testshib_provider(

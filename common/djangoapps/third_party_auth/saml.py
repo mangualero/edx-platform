@@ -231,6 +231,11 @@ class SapSuccessFactorsIdentityProvider(EdXSAMLIdentityProvider):
     def odata_client_id(self):
         return self.conf['odata_client_id']
 
+    @property
+    def odata_user_request_fields(self):
+        """ Optional property for overriding OData User field specification """
+        return self.conf.get('odata_user_request_fields')
+
     def invalid_configuration(self):
         """
         Check that we have all the details we need to properly retrieve rich data from the
@@ -357,7 +362,8 @@ class SapSuccessFactorsIdentityProvider(EdXSAMLIdentityProvider):
         if self.invalid_configuration():
             return basic_details
         user_id = basic_details['username']
-        fields = ','.join(self.field_mappings)
+        default_user_request_fields = ','.join(self.field_mappings)
+        fields = self.odata_user_request_fields if self.odata_user_request_fields else default_user_request_fields
         endpoint_url = '{root_url}User(userId=\'{user_id}\')?$select={fields}'.format(
             root_url=self.odata_api_root_url,
             user_id=user_id,
