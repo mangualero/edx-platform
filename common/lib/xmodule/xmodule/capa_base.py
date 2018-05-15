@@ -440,7 +440,7 @@ class CapaMixin(ScorableXBlockMixin, CapaFields):
         # The logic flow is a little odd so that _('xxx') strings can be found for
         # translation while also running _() just once for each string.
         _ = self.runtime.service(self, "i18n").ugettext
-        submit = _('Submit')
+        submit = _('Guardar respuesta')
 
         return submit
 
